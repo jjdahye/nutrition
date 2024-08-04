@@ -9,7 +9,14 @@ class NutrientRecommendation(APIView):
     def get(self, request):
         foods = Food.objects.all()
         serializer = FoodSerializer(foods, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        response_data = [
+            {
+                "name": food["name"],
+                "category": food["category"]
+            }
+            for food in serializer.data
+        ]
+        return Response(response_data, status=status.HTTP_200_OK)
     
     def post(self, request):
         total_calories = request.data.get('total_calories')
